@@ -40,7 +40,7 @@ import BuiltinPanel from '@/components/resources/engines/panels/BuiltinPanel';
 import CloudProviderPanel from '@/components/resources/engines/panels/CloudProviderPanel';
 import EngineOverviewPanel from '@/components/resources/engines/EngineOverviewPanel';
 import EngineIcon from '@/components/resources/engines/EngineIcon';
-import AsrProviderIcon from '@/components/resources/engines/AsrProviderIcon';
+import ProviderBrandIcon from '@/components/ProviderBrandIcon';
 import { Panel, PanelHeader } from '@/components/ui/panel';
 import { LayoutGrid } from 'lucide-react';
 import ModelLibrarySection from '@/components/resources/ModelLibrarySection';
@@ -874,9 +874,7 @@ const EngineModelTab: React.FC = () => {
                       : 'text-foreground hover:bg-accent',
                   )}
                 >
-                  <AsrProviderIcon
-                    type={{ icon: v.icon, iconImg: v.iconImg }}
-                  />
+                  <ProviderBrandIcon icon={v.icon} iconImg={v.iconImg} />
                   <span className="min-w-0 flex-1 truncate" title={v.label}>
                     {v.label}
                   </span>

@@ -30,6 +30,7 @@ import {
 import {
   ChevronDown,
   CloudDownload,
+  HardDrive,
   HardDriveUpload,
   LayoutGrid,
   Mic2,
@@ -39,6 +40,7 @@ import {
 import { toast } from 'sonner';
 import { cn } from 'lib/utils';
 import { Panel, PanelHeader } from '@/components/ui/panel';
+import ProviderBrandIcon from '@/components/ProviderBrandIcon';
 import useLocalStorageState from 'hooks/useLocalStorageState';
 import useTtsProviders from 'hooks/useTtsProviders';
 import useClonedVoices from 'hooks/useClonedVoices';
@@ -270,8 +272,8 @@ const TtsServicesTab: React.FC = () => {
                       : 'text-foreground hover:bg-accent',
                   )}
                 >
-                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center text-base">
-                    💻
+                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center">
+                    <HardDrive className="h-4 w-4" />
                   </span>
                   <span
                     className="min-w-0 flex-1 truncate"
@@ -310,9 +312,7 @@ const TtsServicesTab: React.FC = () => {
                       : 'text-foreground hover:bg-accent',
                   )}
                 >
-                  <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center text-base">
-                    {v.icon ?? '☁️'}
-                  </span>
+                  <ProviderBrandIcon icon={v.icon} iconImg={v.iconImg} />
                   <span className="min-w-0 flex-1 truncate" title={v.label}>
                     {v.label}
                   </span>

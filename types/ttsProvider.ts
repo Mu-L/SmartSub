@@ -175,6 +175,7 @@ export const TTS_PROVIDER_TYPES: TtsProviderType[] = [
     name: 'Edge TTS',
     isBuiltin: true,
     icon: '🌐',
+    iconImg: '/images/providers/microsoft-color.svg',
     // 逆向接口：免费无 key，但随时可能断供（2025-12 曾大规模断），UI 显著标注试用档。
     unstable: true,
     // 与 Azure 同一 Neural 音色命名体系，共用微软语音库文档。
@@ -222,6 +223,7 @@ export const TTS_PROVIDER_TYPES: TtsProviderType[] = [
     shortName: 'Azure',
     isBuiltin: true,
     icon: '🔷',
+    iconImg: '/images/providers/azure-color.svg',
     // 品牌型硬单例：region + subscription key 凭据，可选 endpoint 覆盖主权云。
     voiceListMode: 'label', // voices/list 全量 700+，仅回填名称不替换清单
     docsUrl:
@@ -409,6 +411,7 @@ export const TTS_PROVIDER_TYPES: TtsProviderType[] = [
     name: 'ElevenLabs',
     isBuiltin: true,
     icon: '🎙️',
+    iconImg: '/images/providers/elevenlabs.svg',
     // 品牌型硬单例：xi-api-key 凭据；国内需网络代理直连。
     voiceListMode: 'replace', // GET /v1/voices 账号音色少，整体替换 + 名称映射
     docsUrl: 'https://elevenlabs.io/app/voice-library',
@@ -501,6 +504,7 @@ export interface TtsProviderPreset {
   id: string;
   name: string;
   icon?: string;
+  iconImg?: string;
   values: Record<string, string>;
 }
 
@@ -510,6 +514,7 @@ export const TTS_PROVIDER_PRESETS: Record<string, TtsProviderPreset[]> = {
       id: 'openai',
       name: 'OpenAI',
       icon: '🤖',
+      iconImg: '/images/providers/openai.svg',
       values: {
         apiUrl: 'https://api.openai.com/v1',
         model: 'tts-1',
@@ -520,6 +525,7 @@ export const TTS_PROVIDER_PRESETS: Record<string, TtsProviderPreset[]> = {
       id: 'siliconflow',
       name: 'SiliconFlow 硅基流动',
       icon: '🧊',
+      iconImg: '/images/providers/siliconcloud-color.svg',
       values: {
         apiUrl: 'https://api.siliconflow.cn/v1',
         model: 'FunAudioLLM/CosyVoice2-0.5B',
@@ -797,6 +803,7 @@ export function buildTtsViews(
         type,
         label: preset.name,
         icon: preset.icon ?? type.icon,
+        iconImg: preset.iconImg ?? type.iconImg,
         preset,
         instance,
         configured: instance ? isTtsProviderConfigured(instance, type) : false,
