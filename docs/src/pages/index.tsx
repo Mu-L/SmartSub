@@ -365,7 +365,7 @@ export default function Home(): ReactNode {
     softwareVersion: version,
     description:
       '开源免费的视频字幕工具：语音转文字、字幕翻译、校对润色、AI 配音与声音克隆、字幕烧录一站式完成，本地处理保护隐私。',
-    url: 'https://smartsub.buxuku.com',
+    url: 'https://smartsub.linxiaodong.com',
     downloadUrl: 'https://github.com/buxuku/SmartSub/releases/latest',
     offers: {
       '@type': 'Offer',

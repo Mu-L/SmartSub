@@ -14,12 +14,13 @@ const appVersion = rootPackageJson.version;
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: '妙幕 SmartSub - 视频转字幕 · 字幕翻译 · AI 配音一站式工具',
+  // 站点 title 保持品牌名：各页面标题自带关键词，经「页面标题 | 站点名」拼接后不重复
+  title: '妙幕 SmartSub',
   tagline: '让每一帧画面都能美妙地表达',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://smartsub.buxuku.com',
+  url: 'https://smartsub.linxiaodong.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
