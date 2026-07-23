@@ -14,7 +14,7 @@ const appVersion = rootPackageJson.version;
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: '妙幕 / SmartSub',
+  title: '妙幕 SmartSub - 视频转字幕 · 字幕翻译 · AI 配音一站式工具',
   tagline: '让每一帧画面都能美妙地表达',
   favicon: 'img/favicon.ico',
 
@@ -45,6 +45,33 @@ const config: Config = {
     locales: ['zh-Hans'],
   },
 
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        // 站点重构后的旧路径重定向，保住已被收录页面的权重
+        redirects: [
+          { from: '/configuration/models', to: '/guides/engines/models' },
+          {
+            from: '/configuration/translation-services',
+            to: '/guides/translation/overview',
+          },
+          { from: '/configuration/settings', to: '/advanced/storage' },
+          { from: '/advanced/build-addon', to: '/development' },
+          {
+            from: '/tasks/audio-video-to-subtitle',
+            to: '/features/subtitle-generation',
+          },
+          {
+            from: '/tasks/subtitle-translation',
+            to: '/features/subtitle-translation',
+          },
+          { from: '/tasks/batch-processing', to: '/intro/quickstart' },
+        ],
+      },
+    ],
+  ],
+
   presets: [
     [
       'classic',
@@ -65,8 +92,15 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: 'img/smartsub-social-card.jpg',
+    image: 'img/smartsub-social-card.png',
+    metadata: [
+      {
+        name: 'keywords',
+        content:
+          '视频转字幕,字幕生成软件,字幕翻译,AI 配音,声音克隆,视频转文字,语音转文字,字幕烧录,SRT,whisper,开源免费,SmartSub,妙幕',
+      },
+      { property: 'og:type', content: 'website' },
+    ],
     navbar: {
       title: '妙幕 / SmartSub',
       logo: {
@@ -132,7 +166,7 @@ const config: Config = {
           items: [
             {
               label: '微信交流群',
-              href: '#',
+              href: 'https://github.com/buxuku/SmartSub#社区与支持',
             },
             {
               label: '问题反馈',

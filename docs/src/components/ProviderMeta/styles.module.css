@@ -1,0 +1,57 @@
+.card {
+  background: var(--ss-surface-subtle);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-radius-lg);
+  padding: 1rem 1.25rem;
+  margin: 1rem 0 1.75rem;
+}
+
+.badge {
+  margin-bottom: 0.75rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.6rem 1.5rem;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ifm-color-secondary-darkest);
+  letter-spacing: 0.02em;
+}
+
+[data-theme='dark'] .label {
+  color: var(--ifm-color-secondary-lightest);
+}
+
+.value {
+  font-size: 0.92rem;
+  margin: 0;
+  word-break: break-word;
+}
+
+.freeTier {
+  font-weight: 600;
+  color: #16813c;
+}
+
+[data-theme='dark'] .freeTier {
+  color: #4ade80;
+}
+
+@media (max-width: 576px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

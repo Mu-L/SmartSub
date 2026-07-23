@@ -1,108 +1,66 @@
 ---
 sidebar_position: 2
 title: 下载与安装
+description: 妙幕（SmartSub）下载安装指南：Windows、macOS（含 Homebrew）、Linux 安装包选择，macOS 提示已损坏的解决办法，GPU 加速包说明。
+keywords: [SmartSub 下载, 妙幕 安装, 字幕软件下载, Homebrew, macOS 已损坏]
 ---
 
 # 下载与安装
 
-本章节将指导您如何下载和安装妙幕（SmartSub）软件，以便开始使用其强大的字幕生成和翻译功能。
-
 ## 系统要求
 
-妙幕支持以下操作系统：
+| 系统    | 要求                                        |
+| ------- | ------------------------------------------- |
+| Windows | Windows 10 / 11（64 位）                    |
+| macOS   | macOS 11.0 或更高（Intel 与 Apple Silicon） |
+| Linux   | 主流 x64 发行版（提供 deb 与 AppImage）     |
 
-- **Windows**：Windows 10/11 (64位)
-- **macOS**：macOS 11.0 或更高版本（支持 Intel 和 Apple Silicon 芯片）
-- **Linux**：主流 Linux 发行版
+:::info v3 起不再按显卡选安装包
+旧版本需要按 CUDA 版本选择安装包，**v3 起每个平台只有一个安装包**。GPU 加速包在安装后由应用内按需下载（NVIDIA 用 CUDA、AMD / Intel 用 Vulkan、Apple 芯片自动启用 Core ML / Metal），无需手动安装 CUDA Toolkit。
+:::
 
-:::note 硬件加速支持
+## 选择安装包
 
-- **NVIDIA CUDA**：需要支持 CUDA 的 NVIDIA 显卡，并安装对应版本的 CUDA Toolkit
-- **Apple Core ML**：需要 Apple Silicon (M系列) 芯片的 Mac 设备
-  :::
+| 系统    | 芯片  | 安装包      | 说明                                              |
+| ------- | ----- | ----------- | ------------------------------------------------- |
+| Windows | x64   | windows-x64 | NVIDIA 用 CUDA，AMD / Intel 用 Vulkan，应用内下载 |
+| macOS   | Apple | mac-arm64   | 自动启用 Core ML / Metal 加速                     |
+| macOS   | Intel | mac-x64     | 仅 CPU，不支持 GPU 加速                           |
+| Linux   | x64   | linux-x64   | 提供 deb 与 AppImage 两种格式                     |
 
-## 选择适合您的版本
+下载入口：[下载页面](/download) ｜ [GitHub Releases](https://github.com/buxuku/SmartSub/releases) ｜ [夸克网盘](https://pan.quark.cn/s/0b16479b40ca)
 
-根据您的操作系统、处理器和显卡选择合适的版本：
+## macOS 安装
 
-| 系统    | 芯片  | 显卡                    | 下载安装包             |
-| ------- | ----- | ----------------------- | ---------------------- |
-| Windows | x64   | CUDA >= 11.8.0 < 12.0.0 | windows-x64_cuda11.8.0 |
-| Windows | x64   | CUDA >= 12.4.0          | windows-x64_cuda12.4.0 |
-| Windows | x64   | CUDA >= 12.2.0          | windows-x64_cuda12.2.0 |
-| Windows | x64   | 无 CUDA                 | windows-x64_no_cuda    |
-| Mac     | Apple | 支持 CoreML             | mac-arm64              |
-| Mac     | Intel | 不支持 CoreML           | mac-x64                |
+推荐使用 Homebrew，会自动匹配芯片类型，升级也只需一条命令：
 
-:::info 关于 CUDA 版本
+```bash
+brew tap buxuku/tap          # 只需执行一次
+brew install --cask smartsub # 安装
+brew upgrade --cask smartsub # 升级
+```
 
-- **通用版本(generic)**：适用于大多数显卡
-- **优化版本(optimized)**：针对特定显卡系列优化，提供更好的兼容性
-- CUDA Toolkit 版本理论上向后兼容，请根据您显卡支持的版本选择合适的软件包
-  :::
-
-## 下载软件
-
-您可以通过以下方式获取妙幕软件：
-
-1. 访问 [GitHub Release 页面](https://github.com/buxuku/SmartSub/releases/latest)
-2. 根据上表选择适合您系统的安装包
-3. 点击对应的安装包名称进行下载
-
-## 安装步骤
-
-### Windows
-
-1. 下载 `.exe` 安装文件
-2. 双击安装文件启动安装程序
-3. 按照安装向导的提示完成安装
-4. 安装完成后，从开始菜单或桌面快捷方式启动应用
-
-### macOS
-
-1. 下载 `.dmg` 安装文件
-2. 双击打开 DMG 文件
-3. 将 Smart Sub 应用拖动到 Applications 文件夹
-4. 从启动台或 Applications 文件夹启动应用
-
-:::caution macOS 安全提示
-首次运行时，macOS 可能会提示"应用程序已损坏，无法打开"。这是因为应用未经 Apple 公证。您可以通过以下步骤解决：
-
-1. 打开终端(Terminal)
-2. 执行以下命令：
+手动安装 DMG 后，如果提示**「应用程序已损坏，无法打开」**，在终端执行以下命令后重新打开即可（这是 macOS 对未上架应用的隔离机制，并非应用真的损坏）：
 
 ```bash
 sudo xattr -dr com.apple.quarantine /Applications/SmartSub.app
 ```
 
-3. 输入您的管理员密码
-4. 再次尝试打开应用
-   :::
+## Windows 安装
 
-### Linux
+下载 `SmartSub_Windows_<版本>_x64.exe` 双击安装。如遇 SmartScreen 提示，点「更多信息 → 仍要运行」。
 
-1. 下载 AppImage 文件
-2. 添加执行权限：
+## Linux 安装
 
-```bash
-chmod +x SmartSub-*.AppImage
-```
+- **deb**（Debian / Ubuntu 系）：`sudo dpkg -i SmartSub_Linux_<版本>_amd64.deb`
+- **AppImage**（任意发行版）：`chmod +x` 后直接运行
 
-3. 直接运行 AppImage 文件：
+## 首次启动
 
-```bash
-./SmartSub-*.AppImage
-```
+第一次打开妙幕会进入新手引导：
 
-## 初次启动
+1. **下载一个语音模型**——没有 GPU 或暂时不想下载模型，也可以先配置[云端听写](/guides/cloud-asr/overview)（联网转写，免模型免 GPU）
+2. 需要 GPU 加速的用户，安装后到「引擎」页面确认加速状态，应用会自动检测显卡并推荐加速方案，详见 [GPU 加速](../advanced/hardware-acceleration)
+3. 模型下载缓慢或失败时，可以手动下载后导入，见[模型选择与导入](/guides/engines/models)
 
-安装完成后，首次启动妙幕软件时，您需要：
-
-1. 下载语音识别模型（详见[模型配置](../configuration/models)章节）
-2. 配置翻译服务（如需使用翻译功能，详见[翻译服务配置](../configuration/translation-services)章节）
-
-完成这些基本设置后，您就可以开始使用妙幕的强大功能了。
-
-## 下一步
-
-成功安装妙幕后，您可以继续阅读[快速入门](./quickstart)指南，了解如何使用基本功能生成和翻译字幕。
+安装完成后，继续阅读[快速上手](./quickstart)跑通第一个任务。

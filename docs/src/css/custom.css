@@ -1,101 +1,305 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * 妙幕 / SmartSub 文档站全局样式
+ *
+ * 设计令牌（design tokens）说明：
+ * - 品牌色对齐应用 UI 主色：浅色 hsl(215 82% 47%)，深色 hsl(211 100% 63%)
+ * - 圆角 / 阴影 / 间距统一由 --ss-* 变量派生，落地页与文档共用
  */
 
-/* You can override the default Infima variables here. */
+/* ========== 1. 设计令牌 ========== */
+
 :root {
-  --ifm-color-primary: #4568dc;
-  --ifm-color-primary-dark: #3456c9;
-  --ifm-color-primary-darker: #2f50be;
-  --ifm-color-primary-darkest: #274296;
-  --ifm-color-primary-light: #5c7be0;
-  --ifm-color-primary-lighter: #6884e3;
-  --ifm-color-primary-lightest: #8ba0e9;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-  --ifm-font-family-base: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
-  --card-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  --card-shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.15);
-  --transition-normal: all 0.3s ease;
+  /* 品牌色（对齐应用 --primary: 215 82% 47%） */
+  --ifm-color-primary: #1568da;
+  --ifm-color-primary-dark: #135ec4;
+  --ifm-color-primary-darker: #1259b9;
+  --ifm-color-primary-darkest: #0f4998;
+  --ifm-color-primary-light: #2374e3;
+  --ifm-color-primary-lighter: #2f7ce5;
+  --ifm-color-primary-lightest: #5c97eb;
+
+  /* 排版 */
+  --ifm-font-family-base:
+    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --ifm-font-family-monospace:
+    'SF Mono', 'JetBrains Mono', Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+  --ifm-code-font-size: 90%;
+  --ifm-line-height-base: 1.75;
+  --ifm-heading-line-height: 1.35;
+  --ifm-h1-font-size: 2.25rem;
+  --ifm-h2-font-size: 1.6rem;
+  --ifm-h3-font-size: 1.25rem;
+
+  /* 圆角与阴影 */
+  --ss-radius-sm: 6px;
+  --ss-radius-md: 10px;
+  --ss-radius-lg: 16px;
+  --ss-shadow-sm:
+    0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 4px rgba(15, 23, 42, 0.06);
+  --ss-shadow-md:
+    0 2px 8px rgba(15, 23, 42, 0.08), 0 8px 24px rgba(15, 23, 42, 0.08);
+  --ss-shadow-lg:
+    0 8px 24px rgba(15, 23, 42, 0.1), 0 20px 48px rgba(15, 23, 42, 0.12);
+
+  /* 表面与边框 */
+  --ss-surface: #ffffff;
+  --ss-surface-subtle: #f6f8fb;
+  --ss-border: #e5e9f0;
+
+  /* 落地页渐变（index.module.css 引用） */
+  --ss-hero-gradient: linear-gradient(
+    160deg,
+    #0d3d8f 0%,
+    #1568da 55%,
+    #3f8cfa 100%
+  );
+  --ss-accent-gradient: linear-gradient(90deg, #1568da, #6d5ae0);
+
+  --ifm-global-radius: var(--ss-radius-md);
+  --ifm-card-border-radius: var(--ss-radius-md);
+  --ifm-toc-border-color: var(--ss-border);
+  --ifm-table-border-color: var(--ss-border);
+  --docusaurus-highlighted-code-line-bg: rgba(21, 104, 218, 0.08);
+
+  /* 兼容旧类名的令牌 */
+  --card-shadow: var(--ss-shadow-md);
+  --card-shadow-hover: var(--ss-shadow-lg);
+  --transition-normal: all 0.25s ease;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #7082e8;
-  --ifm-color-primary-dark: #5569e3;
-  --ifm-color-primary-darker: #475de0;
-  --ifm-color-primary-darkest: #1f39d4;
-  --ifm-color-primary-light: #8b9bed;
-  --ifm-color-primary-lighter: #99a7f0;
-  --ifm-color-primary-lightest: #c2caf6;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-  --card-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  --card-shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.3);
+  /* 品牌色（对齐应用深色 --primary: 211 100% 63%） */
+  --ifm-color-primary: #42a0ff;
+  --ifm-color-primary-dark: #2492ff;
+  --ifm-color-primary-darker: #158bff;
+  --ifm-color-primary-darkest: #0072e4;
+  --ifm-color-primary-light: #60aeff;
+  --ifm-color-primary-lighter: #6fb5ff;
+  --ifm-color-primary-lightest: #9ccbff;
+
+  --ifm-background-color: #14161a;
+  --ifm-background-surface-color: #1c1f26;
+
+  --ss-surface: #1c1f26;
+  --ss-surface-subtle: #22262e;
+  --ss-border: #2e333d;
+  --ss-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.3);
+  --ss-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --ss-shadow-lg:
+    0 8px 24px rgba(0, 0, 0, 0.4), 0 20px 48px rgba(0, 0, 0, 0.45);
+
+  --ss-hero-gradient: linear-gradient(
+    160deg,
+    #0a1e42 0%,
+    #113d85 55%,
+    #1e63c4 100%
+  );
+  --ss-accent-gradient: linear-gradient(90deg, #42a0ff, #8f7cff);
+
+  --docusaurus-highlighted-code-line-bg: rgba(66, 160, 255, 0.12);
 }
 
-/* 自定义首页样式 */
-.hero__title {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+/* ========== 2. 全局排版与阅读体验 ========== */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-.hero__subtitle {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+.markdown h1:first-child {
+  --ifm-h1-font-size: 2.25rem;
 }
 
-.hero {
-  background: linear-gradient(135deg, #4568dc, #b06ab3);
-  color: white;
-  padding: 6rem 0;
+.markdown > h2 {
+  --ifm-h2-font-size: 1.6rem;
+  margin-top: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ss-border);
 }
 
-.hero .button {
-  background-color: white;
-  color: var(--ifm-color-primary);
-  border: none;
-  transition: var(--transition-normal);
+.markdown > h3 {
+  margin-top: 2rem;
+}
+
+/* 正文行宽控制：过宽的行影响中文阅读 */
+.theme-doc-markdown {
+  max-width: 46rem;
+}
+
+.theme-doc-markdown img {
+  border-radius: var(--ss-radius-md);
+  border: 1px solid var(--ss-border);
+  box-shadow: var(--ss-shadow-sm);
+}
+
+/* 表格 */
+.markdown table {
+  display: table;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.markdown table th {
+  background: var(--ss-surface-subtle);
   font-weight: 600;
-  padding: 12px 24px;
 }
 
-.hero .button:hover {
-  background-color: rgba(255, 255, 255, 0.9);
+/* 行内代码 */
+code {
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-radius-sm);
+  padding: 0.1rem 0.35rem;
+}
+
+/* 提示框 */
+.alert {
+  border-radius: var(--ss-radius-md);
+  box-shadow: none;
+  border-left-width: 4px;
+}
+
+/* ========== 3. 导航与侧边栏 ========== */
+
+.navbar {
+  box-shadow: 0 1px 0 var(--ss-border);
+}
+
+[data-theme='light'] .navbar {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(1.8) blur(12px);
+  -webkit-backdrop-filter: saturate(1.8) blur(12px);
+}
+
+[data-theme='dark'] .navbar {
+  background: rgba(20, 22, 26, 0.85);
+  backdrop-filter: saturate(1.8) blur(12px);
+  -webkit-backdrop-filter: saturate(1.8) blur(12px);
+}
+
+.navbar__title {
+  font-weight: 700;
+}
+
+/* 侧边栏当前项胶囊态 */
+.menu__link {
+  border-radius: var(--ss-radius-sm);
+  font-size: 0.9rem;
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  background: rgba(21, 104, 218, 0.08);
+  font-weight: 600;
+}
+
+[data-theme='dark'] .menu__link--active:not(.menu__link--sublist) {
+  background: rgba(66, 160, 255, 0.12);
+}
+
+.menu__list-item-collapsible {
+  border-radius: var(--ss-radius-sm);
+}
+
+/* 分类标题 */
+.theme-doc-sidebar-item-category-level-1
+  > .menu__list-item-collapsible
+  > .menu__link {
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+/* ========== 4. 通用组件类（落地页 / 文档共用） ========== */
+
+/* 卡片 */
+.ss-card {
+  background: var(--ss-surface);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-radius-lg);
+  box-shadow: var(--ss-shadow-sm);
+  transition: var(--transition-normal);
+}
+
+.ss-card:hover {
+  box-shadow: var(--ss-shadow-md);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
-.hero .button--outline {
-  background-color: transparent;
-  border: 2px solid white;
-  color: white;
+/* 徽章 */
+.ss-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.6;
+  background: rgba(21, 104, 218, 0.09);
+  color: var(--ifm-color-primary);
+  border: 1px solid rgba(21, 104, 218, 0.18);
 }
 
-.hero .button--outline:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+[data-theme='dark'] .ss-pill {
+  background: rgba(66, 160, 255, 0.12);
+  border-color: rgba(66, 160, 255, 0.25);
 }
 
-/* 特性卡片 */
+.ss-pill--green {
+  background: rgba(22, 163, 74, 0.09);
+  color: #16813c;
+  border-color: rgba(22, 163, 74, 0.2);
+}
+
+[data-theme='dark'] .ss-pill--green {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.25);
+}
+
+.ss-pill--amber {
+  background: rgba(217, 119, 6, 0.09);
+  color: #b45309;
+  border-color: rgba(217, 119, 6, 0.2);
+}
+
+[data-theme='dark'] .ss-pill--amber {
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.25);
+}
+
+/* 文档内截图容器（内容页使用） */
+.img-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem 0;
+}
+
+.img-container img {
+  max-width: 100%;
+  border-radius: var(--ss-radius-md);
+  border: 1px solid var(--ss-border);
+  box-shadow: var(--ss-shadow-md);
+}
+
+/* 旧类名兼容：特性卡片（落地页重写后仍可复用） */
 .features-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 30px;
-  margin: 40px 0;
+  gap: 24px;
+  margin: 32px 0;
 }
 
 .feature-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: var(--card-shadow);
-  padding: 32px 24px;
+  background: var(--ss-surface);
+  border: 1px solid var(--ss-border);
+  border-radius: var(--ss-radius-lg);
+  box-shadow: var(--ss-shadow-sm);
+  padding: 28px 24px;
   flex: 1 1 300px;
-  max-width: 350px;
+  max-width: 360px;
   transition: var(--transition-normal);
   text-align: center;
   display: flex;
@@ -104,70 +308,55 @@
 }
 
 .feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--ss-shadow-md);
 }
 
 .feature-card h3 {
-  color: var(--ifm-color-primary);
-  margin: 16px 0;
-  font-size: 1.5rem;
+  color: var(--ifm-heading-color);
+  margin: 14px 0 8px;
+  font-size: 1.15rem;
   font-weight: 600;
 }
 
 .feature-card p {
   color: var(--ifm-color-secondary-darkest);
-  line-height: 1.6;
+  font-size: 0.92rem;
+  line-height: 1.7;
   margin-bottom: 0;
 }
 
-[data-theme='dark'] .feature-card {
-  background: var(--ifm-card-background-color);
+[data-theme='dark'] .feature-card p {
+  color: var(--ifm-color-secondary-lightest);
 }
 
-/* 截图区域 */
-.screenshot {
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  margin: 30px 0;
-  width: 100%;
-  transition: var(--transition-normal);
+/* ========== 5. 页脚 ========== */
+
+.footer--dark {
+  --ifm-footer-background-color: #101216;
 }
 
-/* 文档内图片 */
-.img-container {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
+.footer__copyright {
+  font-size: 0.85rem;
+  opacity: 0.7;
 }
 
-.img-container img {
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: var(--card-shadow);
-  transition: var(--transition-normal);
+/* ========== 6. 响应式 ========== */
+
+@media (max-width: 996px) {
+  .theme-doc-markdown {
+    max-width: 100%;
+  }
 }
 
-.img-container img:hover {
-  box-shadow: var(--card-shadow-hover);
-}
-
-a p {
-  margin-bottom: 0;
-  padding: 12px 0;
-}
-
-/* 响应式调整 */
 @media (max-width: 768px) {
-  .hero__title {
-    font-size: 2.5rem;
+  :root {
+    --ifm-h1-font-size: 1.8rem;
+    --ifm-h2-font-size: 1.4rem;
   }
 
-  .hero__subtitle {
-    font-size: 1.2rem;
-  }
-
-  .feature-card {
-    padding: 24px 20px;
+  .markdown table {
+    display: block;
+    overflow-x: auto;
   }
 }
