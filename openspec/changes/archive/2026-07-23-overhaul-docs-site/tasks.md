@@ -49,4 +49,4 @@
 ## 8. 验收
 
 - [x] 8.1 `yarn build` 通过（onBrokenLinks: throw）；本地 serve + 浏览器走查：落地页浅色/深色全页、375px 移动端、腾讯云服务商页（ProviderMeta 渲染正常），OG 图路由 200
-- [ ] 8.2 Vercel 预览部署人工走查：落地页、任一服务商页、任一场景页、更新日志；OG 卡在分享调试工具中正常展示（需推送后在 Vercel 预览环境执行）
+- [x] 8.2 生产部署走查（smartsub.linxiaodong.com）：落地页、腾讯云服务商页、视频出海场景页、更新日志均 200；旧路径重定向生效；og:image / canonical 指向正确域名且图片可达（归档后补验，含域名修正提交 9840f15）
