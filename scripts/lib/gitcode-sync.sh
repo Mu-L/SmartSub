@@ -19,6 +19,9 @@ GH_TAG="${GH_TAG:-latest}"
 MAX_RETRIES="${MAX_RETRIES:-3}"
 GITCODE_DRY_RUN="${GITCODE_DRY_RUN:-0}"
 GHPROXY_BASE="${GHPROXY_BASE:-https://gh-proxy.com}"
+# 下载重试次数（比上传 MAX_RETRIES 多：每次重试从 .part 断点续传，成本低，
+# 且 ghproxy 按连接限速的场景下靠「断开重连」恢复全速，本来就预期多试几次）。
+DOWNLOAD_RETRIES="${DOWNLOAD_RETRIES:-5}"
 FORCE="${FORCE:-0}"
 SKIP_VERIFY="${SKIP_VERIFY:-0}"
 # Per-file PUT timeout（秒）。-T 流式 + 健康 GitCode（~10MB/s）下，1.4GB 包约 ~150s 完成；
@@ -166,10 +169,37 @@ delete_attachment() {
   esac
 }
 
+# 新建的 GitCode 镜像仓库是空仓库（无任何分支），tag/release 会报「main is not exist」。
+# 空仓库时先用 contents API 提交一个 README 初始化默认分支；非空仓库为 no-op。
+ensure_repo_initialized() {
+  local count
+  count=$(curl -sS --connect-timeout 20 --max-time 60 \
+    -H "Authorization: Bearer ${GITCODE_TOKEN}" \
+    "${GITCODE_API_URL}/repos/${GITCODE_OWNER}/${GITCODE_REPO}/branches" 2>/dev/null \
+    | jq -r 'if type=="array" then length else 0 end' 2>/dev/null || echo 0)
+  [ "${count:-0}" -eq 0 ] || return 0
+
+  log "GitCode 仓库为空（无分支），提交 README 初始化默认分支 ..."
+  local readme_b64 response http_code
+  readme_b64=$(printf '# %s\n\nGitCode mirror of GitHub %s release artifacts. Auto-synced by scripts/sync-gitcode.sh (buxuku/SmartSub).\n' \
+    "$GITCODE_REPO" "$GH_REPO" | base64 | tr -d '\n')
+  response=$(curl -sS -w "\n%{http_code}" -X POST \
+    -H "Authorization: Bearer ${GITCODE_TOKEN}" -H "Content-Type: application/json" \
+    -d "$(jq -n --arg c "$readme_b64" '{content:$c,message:"Init: create default branch for release mirror",branch:"main"}')" \
+    "${GITCODE_API_URL}/repos/${GITCODE_OWNER}/${GITCODE_REPO}/contents/README.md")
+  http_code=$(echo "$response" | tail -n1)
+  if [ "$http_code" != "200" ] && [ "$http_code" != "201" ]; then
+    echo "初始化 GitCode 空仓库失败 (HTTP ${http_code}): $(echo "$response" | sed '$d')" >&2
+    exit 1
+  fi
+  log "已初始化 ${GITCODE_OWNER}/${GITCODE_REPO} 默认分支 main"
+}
+
 # 创建 tag + release（假定 tag 不存在；reset_release 会先删旧 tag 再调用本函数）。
 create_release() {
   log "Creating GitCode tag and release '${GITCODE_TAG}'..."
   [ "$GITCODE_DRY_RUN" = "1" ] && { log "[dry-run] would create tag and release"; return 0; }
+  ensure_repo_initialized
 
   local tag_response tag_code
   tag_response=$(curl -sS -w "\n%{http_code}" -X POST \
@@ -372,15 +402,47 @@ patch_release_body() {
 }
 
 # --- 通用步骤 -----------------------------------------------------------------
+# 下载单个 GitHub 产物（.part 断点续传 + 任意错误重试）。
+# ghproxy 的典型故障：连接先快、随后被按连接限速到几百 B/s，最后代理用 HTTP/2
+# INTERNAL_ERROR（curl exit 92）掐断流。curl 自带 --retry 只认「transient」错误
+# （超时/429/5xx），既不覆盖 92 也不续传，一断整个脚本就随 set -e 退出。
+# 对策：--http1.1 规避 h2 流错误；--speed-* 在限速僵死约 2 分钟时主动断开；
+# bash 层对任何非零退出都重试，并用 -C - 从 .part 续传（重连通常恢复全速）。
+# .part 在失败后保留（WORKDIR 仅成功才清理），脚本整体重跑时也能接着传。
+download_asset() {
+  local name="$1" dest="$2"
+  local url part rc attempt
+  url="$(gh_url "$name")"
+  part="${dest}.part"
+  for ((attempt = 1; attempt <= DOWNLOAD_RETRIES; attempt++)); do
+    rc=0
+    curl -fL --http1.1 -C - \
+      --connect-timeout 30 --max-time 3600 \
+      --speed-time 120 --speed-limit 10240 \
+      -o "$part" "$url" || rc=$?
+    if [ "$rc" -eq 0 ]; then
+      mv "$part" "$dest"
+      return 0
+    fi
+    # 22/33 常见于对 .part 续传命中 416 / 服务端不认 Range：丢弃残片从头再下。
+    if [ "$rc" -eq 22 ] || [ "$rc" -eq 33 ]; then rm -f "$part"; fi
+    log "  下载中断 (curl exit ${rc})，重试 ${attempt}/${DOWNLOAD_RETRIES}: ${name}"
+    sleep $((5 * attempt))
+  done
+  rm -f "$part"
+  return 1
+}
+
 download_files() {
   log "需要同步 → 下载 ${GH_REPO} ${GH_TAG} 产物到 $DL_DIR"
   mkdir -p "$DL_DIR"
   local name
   for name in "${FILES[@]}"; do
     log "  下载: $name"
-    curl -fL --retry 3 --retry-delay 5 \
-      --connect-timeout 30 --max-time 3600 \
-      -o "$DL_DIR/$name" "$(gh_url "$name")"
+    if ! download_asset "$name" "$DL_DIR/$name"; then
+      echo "下载失败（已重试 ${DOWNLOAD_RETRIES} 次）: ${name}——可换 GHPROXY_BASE 镜像或调整 USE_GHPROXY 后重跑，已下载部分会续传" >&2
+      exit 1
+    fi
   done
 }
 
@@ -438,9 +500,8 @@ sync_legacy_files() {
     fi
     dest="${legacy_dir}/${filename}"
     log "  从 GitHub 下载 legacy: ${filename}"
-    if ! curl -fsSL --connect-timeout 30 --max-time 3600 -o "$dest" "$(gh_url "$filename")"; then
-      log "  Warning: GitHub 上没有该 legacy 文件，跳过: ${filename}"
-      rm -f "$dest"
+    if ! download_asset "$filename" "$dest"; then
+      log "  Warning: legacy 文件下载失败（GitHub 上可能没有该文件），跳过: ${filename}"
       continue
     fi
     upload_file "$dest" false "$LEGACY_PUT_TIMEOUT" || true

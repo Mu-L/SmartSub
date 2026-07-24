@@ -26,23 +26,32 @@ Make every frame speak beautifully
 
 ## What is SmartSub?
 
-SmartSub is an open-source subtitle and dubbing tool that packs the whole pipeline — **speech-to-text → subtitle translation → proofreading → AI dubbing → burn-in** — into one desktop app. Transcription runs on local models (whisper.cpp, sherpa-onnx and more), so your files never leave your machine. It handles batch jobs, accelerates on NVIDIA / AMD / Intel / Apple Silicon GPUs, and runs on Windows, macOS, and Linux.
+SmartSub is an open-source subtitle and dubbing tool that packs the whole pipeline — **speech-to-text → subtitle translation → proofreading → AI dubbing → burn-in** — into one desktop app, with a built-in online video downloader: paste a YouTube / Bilibili link and the source video is fetched for you. Transcription runs on local models (whisper.cpp, sherpa-onnx and more), so your files never leave your machine. It handles batch jobs, accelerates on NVIDIA / AMD / Intel / Apple Silicon GPUs, and runs on Windows, macOS, and Linux.
 
 If you've been juggling separate tools for transcription, translation, text-to-speech, and burning subtitles with ffmpeg, SmartSub is a free, offline-friendly way to do all of it in one place. **The entire pipeline can run at zero cost**: local Whisper transcription, built-in free translation sources, local TTS dubbing with voice cloning, and local ffmpeg burn-in — no API keys required, no usage caps on local processing. When you want more, plug in any of 20 translation services, 8 cloud transcription providers, and 5 cloud TTS services.
 
 ## What can it do for you?
 
-| Your goal                                     | How SmartSub handles it                                                              |
-| --------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Watch foreign videos or lectures without subs | Drop in the video, transcribe locally, translate — get bilingual subtitles instantly |
-| Localize content for other markets            | Translate subtitles, then dub them into a new audio track with TTS                   |
-| Narrate videos in your own voice              | Record a short sample, clone your voice, and have it read the whole video            |
-| Archive podcasts, courses, meeting recordings | Batch-transcribe into SRT files for editing, search, or archiving                    |
-| Ship videos with polished subtitles           | Proofread line by line, then hardcode or soft-mux with WYSIWYG styling               |
+| Your goal                                     | How SmartSub handles it                                                                    |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Watch foreign videos or lectures without subs | Drop in the video, transcribe locally, translate — get bilingual subtitles instantly       |
+| Subtitle an online video (YouTube / Bilibili) | Paste the link — the video downloads in-app, official subs auto-pair, no third-party tools |
+| Localize content for other markets            | Translate subtitles, then dub them into a new audio track with TTS                         |
+| Narrate videos in your own voice              | Record a short sample, clone your voice, and have it read the whole video                  |
+| Archive podcasts, courses, meeting recordings | Batch-transcribe into SRT files for editing, search, or archiving                          |
+| Ship videos with polished subtitles           | Proofread line by line, then hardcode or soft-mux with WYSIWYG styling                     |
 
 ## Features
 
-Media → **transcribe** → **translate** → **proofread** → **dub** → **export**. Use each step on its own, or chain them into a batch pipeline.
+Online video **download** / local media → **transcribe** → **translate** → **proofread** → **dub** → **export**. Use each step on its own, or chain them into a batch pipeline.
+
+### Online video download
+
+- Paste links to download videos from YouTube, Bilibili, and more — one link per line for batch downloads, with automatic link extraction from mixed text
+- Dual engines: yt-dlp (YouTube and 1800+ sites) and lux (Bilibili, Douyin, Xiaohongshu, and other Chinese platforms), auto-matched per platform and installed / updated in one click inside the app
+- Optionally grab the platform's official subtitles (auto-generated ones included), auto-paired in the task wizard — with official subs there's nothing to transcribe
+- Import site cookies (one-click browser extraction, cookies.txt, or paste) to unlock login-gated resolutions and member-only content; cookies stay on your machine
+- Configurable output folder, quality (best or a specific tier), and concurrency; finished downloads hand off to transcription / translation in one click
 
 ### Subtitle generation (transcription)
 
@@ -97,12 +106,13 @@ Media → **transcribe** → **translate** → **proofread** → **dub** → **e
 
 If you're cost-conscious, this route costs nothing and requires no sign-ups:
 
-| Step          | Free option                                                                       | Notes                                     |
-| ------------- | --------------------------------------------------------------------------------- | ----------------------------------------- |
-| Transcription | whisper.cpp / faster-whisper / FunASR / Qwen3-ASR / FireRedASR local models       | Download a model once, works offline      |
-| Translation   | Built-in free translation (Bing / Google endpoints with fallback), Ollama, DeepLX | Free translation works with zero setup    |
-| TTS dubbing   | Local Kokoro / VITS / ZipVoice voice cloning; Edge TTS free tier                  | Local synthesis is offline, no usage caps |
-| Burn-in       | Bundled ffmpeg                                                                    | Fully local                               |
+| Step           | Free option                                                                       | Notes                                     |
+| -------------- | --------------------------------------------------------------------------------- | ----------------------------------------- |
+| Video download | yt-dlp / lux open-source engines                                                  | Installed in-app with one click, free     |
+| Transcription  | whisper.cpp / faster-whisper / FunASR / Qwen3-ASR / FireRedASR local models       | Download a model once, works offline      |
+| Translation    | Built-in free translation (Bing / Google endpoints with fallback), Ollama, DeepLX | Free translation works with zero setup    |
+| TTS dubbing    | Local Kokoro / VITS / ZipVoice voice cloning; Edge TTS free tier                  | Local synthesis is offline, no usage caps |
+| Burn-in        | Bundled ffmpeg                                                                    | Fully local                               |
 
 Paid cloud services (OpenAI, ElevenLabs, Volcengine, Tencent Cloud, and others) are optional upgrades — use them only if you want them.
 
@@ -130,7 +140,7 @@ brew upgrade --cask smartsub # upgrade
 ### Up and running in three steps
 
 1. After installing, follow the onboarding guide to download a speech model (no GPU or no model? Configure Cloud ASR instead)
-2. Pick a task from the launchpad, drop in media or subtitle files, and set source language, target language, and other options
+2. Pick a task from the launchpad, drop in media or subtitle files (or paste a link to download an online video), and set source language, target language, and other options
 3. Start processing — then proofread, dub, or burn in the results
 
 ## Going deeper
